@@ -1,3 +1,10 @@
+var ltd ;
+var lgt ; 
+
+
+
+
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,63 +25,19 @@
  */
 
 
-
-// $(function(){
-//     // Initialize Firebase
-//     var config = {
-//        apiKey: "AIzaSyASZCb_OgmtwpSyea4_j5hhKu5XYYvTzmU",
-//        authDomain: "fir-e5e4e.firebaseapp.com",
-//        databaseURL: "https://fir-e5e4e.firebaseio.com",
-//        projectId: "fir-e5e4e",
-//        storageBucket: "fir-e5e4e.appspot.com",
-//        messagingSenderId: "489270372821"
-//      };
-//      firebase.initializeApp(config);
-   
-     
-//      var storage = firebase.storage();
-//      var storageRef = firebase.storage().ref();
-    
-    
-    
-    
-    
-    
-    
-// //        var timestamp = Number(new Date());
-// //        var photoRef = storageRef.child("photos/" + timestamp + ".png");
-// //        storageRef.putString(imageURI, 'base64').then(function(snapshot) {
-// //         console.log('Uploaded a base64 string!');
-// });
-var ltd;
-var lgt;  
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady() {
+    console.log("navigator.geolocation works well");
+}
+ 
 $("#location").click(function(){        
-  var onSuccess = function(position) {
-      alert('Latitude: '          + position.coords.latitude          + '\n' +
-            'Longitude: '         + position.coords.longitude         + '\n' +
-            'Altitude: '          + position.coords.altitude          + '\n' +
-            'Accuracy: '          + position.coords.accuracy          + '\n' +
-            'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-            'Heading: '           + position.coords.heading           + '\n' +
-            'Speed: '             + position.coords.speed             + '\n' +
-            'Timestamp: '         + position.timestamp                + '\n');
-            ltd = position.coords.latitude;
-            lgt = position.coords.longitude;
-  };
-
-  // onError Callback receives a PositionError object
-  //
-  function onError(error) {
-      alert('code: '    + error.code    + '\n' +
-            'message: ' + error.message + '\n');
-  }
-
-  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  
 });   
 
 
  
-var photoURL;
+var photoURL = null;
+var db;
 $(function(){
 
   var config = {
@@ -86,11 +49,10 @@ $(function(){
     messagingSenderId: "489270372821"
   };
   firebase.initializeApp(config);
+}); 
   //---------------------------------------------------------------------
   
   
-
-});
 
 
 
@@ -110,7 +72,7 @@ function cam() {
      function onSuccess(imageURI) {
        
        
-//------------------------------------------------------------------------------------------------------------       
+    
     
 var base64str = imageURI;
 var binary = atob(base64str.replace(/\s/g, ''));
@@ -122,7 +84,7 @@ view[i] = binary.charCodeAt(i);
 }         
 var blob = new Blob( [view], { type: "image/jpeg" });
 
-//-------------------------------------------------------------------------------------------------------------
+
 var timestamp = Number(new Date());
 var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
 
@@ -145,11 +107,38 @@ var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
   
 //-------------------------------------------CAMERA----------------------------------------------
 
+
+
+
+function locate(){
+  var onSuccess = function(position) {
+    ltd=position.coords.latitude;
+    lgt=position.coords.longitude;
+    alert(ltd +"and"+lgt);
+    
+};
+
+// onError Callback receives a PositionError object
+//
+function onError(error) {
+    alert('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+}
+
+navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+
+}
+
 function add(){
+
   var description = document.getElementById('description').value;
+  var timestamp = Number(new Date());
+  
   console.log(description);
   var db = firebase.firestore();
-  db.collection("pins").add({
+  db.collection("pins").doc("'"+timestamp+"'").set({
+    id: timestamp,
     photo: photoURL,
     description: description,
     lat: ltd,
@@ -159,5 +148,84 @@ function add(){
 alert(photoURL+"/n"+description+"/n"+ltd+"/n"+lgt);
 
 }
-   
+$(function(){
+
+var db = firebase.firestore();   
+var mus = $('#template').html();
+var firestoreRef = db.collection("pins");
+firestoreRef.orderBy("id", "desc").get().then(function(querySnapshot) {
+  console.log(querySnapshot);
+    querySnapshot.forEach(function(doc) {
+        console.log(doc.id, " => ", doc.data());
+        db.collection("pins").doc(doc.id).update({
+          id: doc.id
+        })
+        var rendered = Mustache.render(mus, doc.data());
+        $("#pins").append(rendered);
+        
+          
+
+    });
+})  
+//-----------------------------------------Getlocation----------------------------------------------
+
+navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+
+
+});
+function onSuccess(position) {
+  ltd=position.coords.latitude;
+  lgt=position.coords.longitude;
+  alert(ltd +"and"+lgt);
   
+};
+
+// onError Callback receives a PositionError object
+//
+function onError(error) {
+  alert('code: '    + error.code    + '\n' +
+        'message: ' + error.message + '\n');
+}
+
+
+var like = function(num) {
+  if (document.getElementById("button-post-like-"+num).classList.contains("like")) {
+    document.getElementById("button-post-like-"+num).classList.remove("ion-ios-heart","like");
+    document.getElementById("button-post-like-"+num).classList.add("ion-ios-heart-outline");
+  } else {
+    document.getElementById("button-post-like-"+num).classList.remove("ion-ios-heart-outline");
+    document.getElementById("button-post-like-"+num).classList.add("ion-ios-heart","like");
+    document.getElementById("post-like-"+num).style.opacity = 1;
+
+    setTimeout(function(){
+      document.getElementById("post-like-"+num).style.opacity = 0;
+    }, 600);
+  }
+}
+
+
+              function initMap() {
+               
+                var uluru = {lat: 7.892804, lng: 98.351697};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 16,
+                  center: uluru
+                });
+                var marker = new google.maps.Marker({
+                  position: uluru,
+                  map: map
+                });
+                $('#locate').click(function(){
+                  var uluru = {lat: ltd, lng: lgt};
+                  var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 16,
+                    center: uluru
+                  });
+                  var marker = new google.maps.Marker({
+                    position: uluru,
+                    map: map
+                  });
+                                  });
+              }
+            
