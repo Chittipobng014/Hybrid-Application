@@ -14,6 +14,7 @@
     "cordova-plugin-camera": "^2.4.1",
     "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-firebase": "^0.1.24",
+    "cordova-plugin-geolocation": "^2.4.3",
     "cordova-plugin-whitelist": "^1.3.2",
     "semver": "^5.4.1"
   },
@@ -21,7 +22,8 @@
     "plugins": {
       "cordova-plugin-camera": {},
       "cordova-plugin-whitelist": {},
-      "cordova-plugin-firebase": {}
+      "cordova-plugin-firebase": {},
+      "cordova-plugin-geolocation": {}
     },
     "platforms": [
       "android"

@@ -46,20 +46,16 @@
   <body>
 
 
-<div>
-
-<input type="file" name="" id="file">
-<button type="submit" onclick="" id="upload">asdsadsad</button>
-</div>
-
-
     <button onclick="cam()">Capture Photo</button> <br>
+    <input type="text" id="description"><br>
+    <button id="location">lat long</button>
+    <button type="submit" onclick="add()">Submittttt</button>
     
-    <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
-    <img style="display:none;" id="largeImage" src="" />
+    
   </body>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="cordova_plugins.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
     
 </html>

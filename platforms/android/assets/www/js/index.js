@@ -46,6 +46,35 @@
 // //        storageRef.putString(imageURI, 'base64').then(function(snapshot) {
 // //         console.log('Uploaded a base64 string!');
 // });
+var ltd;
+var lgt;  
+$("#location").click(function(){        
+  var onSuccess = function(position) {
+      alert('Latitude: '          + position.coords.latitude          + '\n' +
+            'Longitude: '         + position.coords.longitude         + '\n' +
+            'Altitude: '          + position.coords.altitude          + '\n' +
+            'Accuracy: '          + position.coords.accuracy          + '\n' +
+            'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+            'Heading: '           + position.coords.heading           + '\n' +
+            'Speed: '             + position.coords.speed             + '\n' +
+            'Timestamp: '         + position.timestamp                + '\n');
+            ltd = position.coords.latitude;
+            lgt = position.coords.longitude;
+  };
+
+  // onError Callback receives a PositionError object
+  //
+  function onError(error) {
+      alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+});   
+
+
+ 
+var photoURL;
 $(function(){
 
   var config = {
@@ -57,11 +86,13 @@ $(function(){
     messagingSenderId: "489270372821"
   };
   firebase.initializeApp(config);
+  //---------------------------------------------------------------------
+  
+  
 
 });
 
 
-   
 
 function cam() {
 
@@ -77,93 +108,56 @@ function cam() {
      });
    
      function onSuccess(imageURI) {
-       console.log(imageURI);
-       var timestamp = Number(new Date());
-       var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
-       //var message = 'data:text/plain;base64,'+imageURI;
        
-
-       //--------------------------------------------------------------------
-       // base64 string
+       
+//------------------------------------------------------------------------------------------------------------       
+    
 var base64str = imageURI;
-
-// decode base64 string, remove space for IE compatibility
 var binary = atob(base64str.replace(/\s/g, ''));
-
-// get binary length
 var len = binary.length;
-
-// create ArrayBuffer with binary length
 var buffer = new ArrayBuffer(len);
-
-// create 8-bit Array
 var view = new Uint8Array(buffer);
-
-// save unicode of binary data into 8-bit Array
 for (var i = 0; i < len; i++) {
-view[i] = binary.charCodeAt(i);
-}
+view[i] = binary.charCodeAt(i);  
+}         
+var blob = new Blob( [view], { type: "image/jpeg" });
 
-// create the blob object with content-type "application/pdf"               
-var blob = new Blob( [view], { type: "application/png" });
-       //--------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------
+var timestamp = Number(new Date());
+var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
+
+
       
-      
-      photoRef.put(blob);
-      //photoRef.putString(message, 'base64');
-       
-       alert(blob);
-     }
-   
+      photoRef.put(blob).then(function (snapshot) {
+      photoRef.getDownloadURL().then(function (url) {
+      photoURL = url;
+          alert(url);
+      })
+  });
+}
      function onFail(message) {
        alert('Failed because: ' + message);
        
      }
    
-   }
-
-   function put(){
+}
 
   
-    
-    var imageURI = document.getElementById("file").value;
+//-------------------------------------------CAMERA----------------------------------------------
 
+function add(){
+  var description = document.getElementById('description').value;
+  console.log(description);
+  var db = firebase.firestore();
+  db.collection("pins").add({
+    photo: photoURL,
+    description: description,
+    lat: ltd,
+    long: lgt
+    
+  })
+alert(photoURL+"/n"+description+"/n"+ltd+"/n"+lgt);
 
-    var storage = firebase.storage();
-    var storageRef = firebase.storage().ref();
-
-    var timestamp = Number(new Date());
-    var photoRef = storageRef.child("photos/test.png");
-    var message = 'data:text/plain;base64,'+imageURI;
-    console.log(imageURI);
-    
- 
-    //var message = 'data:text/plain;base64,'+imageURI;
-    photoRef.put(imageURI);
-    
-
-
-   }
-   $(function () {
-    
-        // Get a reference to the storage service, which is used to create references in your storage bucket
-        var storage = firebase.storage();
-    
-        // Points to the root reference
-        var storageRef = firebase.storage().ref();
-        
-    
-        $("#upload").click(function () {
-    
-            var photofile = $("#file").prop("files")[0];
-            var timestamp = Number(new Date());
-            var photoRef = storageRef.child("photos/" + timestamp + ".png");
-            console.log(photofile); 
-            photoRef.put(photofile);
-               
-            
-        });
-    
-    });
-
-    
+}
+   
+  
