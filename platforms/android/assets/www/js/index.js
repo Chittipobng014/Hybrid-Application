@@ -105,7 +105,7 @@ view[i] = binary.charCodeAt(i);
 }
 
 // create the blob object with content-type "application/pdf"               
-var blob = new Blob( [view], { type: "application/pdf" });
+var blob = new Blob( [view], { type: "application/png" });
        //--------------------------------------------------------------------
       
       
