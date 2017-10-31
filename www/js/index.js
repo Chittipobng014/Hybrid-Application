@@ -112,8 +112,7 @@ var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
 
 function locate(){
   var onSuccess = function(position) {
-    ltd=position.coords.latitude;
-    lgt=position.coords.longitude;
+  
     
     alert(ltd +"and"+lgt);
     
@@ -175,8 +174,7 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
 });
 function onSuccess(position) {
-  ltd=position.coords.latitude;
-  lgt=position.coords.longitude;
+  
 
   alert(ltd +"and"+lgt);
   
@@ -222,6 +220,8 @@ var like = function(num) {
                         // Try HTML5 geolocation.
                         if (navigator.geolocation) {
                           navigator.geolocation.getCurrentPosition(function(position) {
+                            ltd=position.coords.latitude;
+                            lgt=position.coords.longitude;
                             var pos = {
                               lat: position.coords.latitude,
                               lng: position.coords.longitude
