@@ -25,14 +25,8 @@ var lgt= 0;
  */
 
 
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-    console.log("navigator.geolocation works well");
-}
  
-$("#location").click(function(){        
-  
-});   
+
 
 
  
@@ -104,31 +98,23 @@ var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
    
 }
 
+function locate(){
+
+alert(ltd +"\n"+ lgt);
+
+}
   
 //-------------------------------------------CAMERA----------------------------------------------
 
 
 
 
-function locate(){
-  var onSuccess = function(position) {
-  
-    
-    alert(ltd +"and"+lgt);
-    
-};
-
-// onError Callback receives a PositionError object
-//
-function onError(error) {
-    alert('code: '    + error.code    + '\n' +
-          'message: ' + error.message + '\n');
-}
-
-navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
 
-}
+
+
+
+
 
 function add(){
 
@@ -168,24 +154,12 @@ firestoreRef.orderBy("id", "desc").get().then(function(querySnapshot) {
 })  
 //-----------------------------------------Getlocation----------------------------------------------
 
-navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
 
 
 
 });
-function onSuccess(position) {
-  
 
-  alert(ltd +"and"+lgt);
-  
-};
-
-// onError Callback receives a PositionError object
-//
-function onError(error) {
-  alert('code: '    + error.code    + '\n' +
-        'message: ' + error.message + '\n');
-}
 
 
 var like = function(num) {
@@ -219,31 +193,32 @@ var like = function(num) {
                 
                         // Try HTML5 geolocation.
                         if (navigator.geolocation) {
-                          navigator.geolocation.getCurrentPosition(function(position) {
+                            navigator.geolocation.getCurrentPosition(function(position) {
                             ltd=position.coords.latitude;
                             lgt=position.coords.longitude;
                             var pos = {
-                              lat: position.coords.latitude,
-                              lng: position.coords.longitude
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
                             };
                             var marker = new google.maps.Marker({
-                              position: pos,
-                              map: map
+                            position: pos,
+                            map: map
                             });
-                            google.maps.event.addListener(marker, 'click', function() {
-                              infoWindow.open(map,marker);
+                            var img = "https://www.atomix.com.au/media/2015/06/atomix_user31.png"
+                            google.maps.event.addListener(marker, img, function() {
+                            infoWindow.open(map,marker);
                             });
                             infoWindow.open(map);
                             map.setCenter(pos);
-                          }, function() {
+                            }, function() {
                             handleLocationError(true, infoWindow, map.getCenter());
-                          });
-                        } else {
-                          // Browser doesn't support Geolocation
-                          handleLocationError(false, infoWindow, map.getCenter());
-                        }
+                            });
+                            } else {
+                            // Browser doesn't support Geolocation
+                            handleLocationError(false, infoWindow, map.getCenter());
+                            }
                         
-                      }
+                }
                 
                       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         infoWindow.setPosition(pos);

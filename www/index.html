@@ -211,7 +211,7 @@
         <button class="w3-btn w3-ripple w3-yellow" style="border-radius:2px;font-size:27px" id="locate" onclick="locate()"> Add Location</button>
       </section>
       <br><br>
-      <ons-card style="border-radius:2px;">
+      <ons-card style="border-radius:2px;margin-left:15px;margin-right:15px">
       <section style="padding: 0px;text-align: center;" class="preview-image">
         <ons-input style="width:80%;font-color:black;" input-id="desc" id="description" modifier="underbar" placeholder="Share what's happen"></ons-input>
       </section>
@@ -270,12 +270,24 @@
 
 <script id="template" type="x-tmpl-mustache">
 
-  <ons-card style="border-radius:2px;background-color:#d8dd8;">
+  <ons-card style="border-radius:2px;background-color:#d8dd8;border:0px">
+      <ons-list-item class="post_title" style="border:0px;">
+          <div class="left">            
+            <img class="list-item__thumbnail" src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" style="width:48px ;height:48px ;border-radius:50%;">
+          </div>
+          <div class="center">
+            <div class="list-item__title"><b>{{id}}</b></div>
+            <div class="list-item__subtitle" style="font-size: 12px">{{lat}}, {{long}}</div>
+          </div>
+          <div class="right"><ons-button class="corner-button" modifier="quiet"><ons-icon icon="ion-ios-more,material:ion-android-more-vertical"></ons-icon></ons-button></div>
+        </ons-list-item>
+     
     <div align="center">
-      <img src="{{photo}}" style="width:90%;height:80%;border-radius:2px;margin-top:15px">
+      <img src="{{photo}}" style="width:90%;height:80%;border-radius:2px;margin-top:15px;border:0px">
     </div>
-      <br>
-      <ons-card style="background-color:#c7c7c7;border-radius:2px">
+      
+      <div align="center">
+      <ons-card style="background-color:#c7c7c7;border-radius:2px;width:91%">
       <div class="content">
         <div>
              <ons-button style="background-color:white;" class="post-button" modifier="quiet" id="{{}}"><ons-icon id="button-post-like-2" icon="ion-ios-heart-outline"></ons-icon></ons-button>
@@ -286,6 +298,7 @@
         
       </div>
     </ons-card>
+  </div>
     </ons-card>
       <br>
       
