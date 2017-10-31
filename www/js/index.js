@@ -100,7 +100,7 @@ var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
 
 function locate(){
 
-alert(ltd +"\n"+ lgt);
+alert(ltd +"\n"+ lgt);//bug
 
 }
   
