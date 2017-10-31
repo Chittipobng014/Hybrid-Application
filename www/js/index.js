@@ -208,7 +208,7 @@ var like = function(num) {
 
               function initMap() {
                
-                var uluru = {lat: 7.892804, lng: 98.351697};
+                var uluru = {lat: 0, lng: 0};
                 var map = new google.maps.Map(document.getElementById('map'), {
                   zoom: 16,
                   center: uluru
