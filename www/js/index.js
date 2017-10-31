@@ -1,5 +1,5 @@
-var ltd ;
-var lgt ; 
+var ltd= 0;
+var lgt= 0;  
 
 
 
@@ -114,6 +114,7 @@ function locate(){
   var onSuccess = function(position) {
     ltd=position.coords.latitude;
     lgt=position.coords.longitude;
+    
     alert(ltd +"and"+lgt);
     
 };
@@ -154,12 +155,11 @@ var db = firebase.firestore();
 var mus = $('#template').html();
 var firestoreRef = db.collection("pins");
 firestoreRef.orderBy("id", "desc").get().then(function(querySnapshot) {
-  console.log(querySnapshot);
-    querySnapshot.forEach(function(doc) {
+      querySnapshot.forEach(function(doc){
         console.log(doc.id, " => ", doc.data());
         db.collection("pins").doc(doc.id).update({
           id: doc.id
-        })
+        })        
         var rendered = Mustache.render(mus, doc.data());
         $("#pins").append(rendered);
         
@@ -177,6 +177,7 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
 function onSuccess(position) {
   ltd=position.coords.latitude;
   lgt=position.coords.longitude;
+
   alert(ltd +"and"+lgt);
   
 };
@@ -212,20 +213,44 @@ var like = function(num) {
                   zoom: 16,
                   center: uluru
                 });
-                var marker = new google.maps.Marker({
-                  position: uluru,
-                  map: map
-                });
-                $('#locate').click(function(){
-                  var uluru = {lat: ltd, lng: lgt};
-                  var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 16,
-                    center: uluru
-                  });
-                  var marker = new google.maps.Marker({
-                    position: uluru,
-                    map: map
-                  });
-                                  });
-              }
+                
+                
+                infoWindow = new google.maps.InfoWindow;
+                
+                
+                
+                        // Try HTML5 geolocation.
+                        if (navigator.geolocation) {
+                          navigator.geolocation.getCurrentPosition(function(position) {
+                            var pos = {
+                              lat: position.coords.latitude,
+                              lng: position.coords.longitude
+                            };
+                            var marker = new google.maps.Marker({
+                              position: pos,
+                              map: map
+                            });
+                            google.maps.event.addListener(marker, 'click', function() {
+                              infoWindow.open(map,marker);
+                            });
+                            infoWindow.open(map);
+                            map.setCenter(pos);
+                          }, function() {
+                            handleLocationError(true, infoWindow, map.getCenter());
+                          });
+                        } else {
+                          // Browser doesn't support Geolocation
+                          handleLocationError(false, infoWindow, map.getCenter());
+                        }
+                        
+                      }
+                
+                      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent(browserHasGeolocation ?
+                                              'Error: The Geolocation service failed.' :
+                                              'Error: Your browser doesn\'t support geolocation.');
+                        infoWindow.open(map);
+                      }
+              
             

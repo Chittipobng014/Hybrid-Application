@@ -40,12 +40,21 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js"></script>
         <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        
         <title>Hello World</title>
         <style>
         .page__background{
 
-            background-color: #80526d;
+            background-color: #71a5bd;
         }
+        .tabbar--material {
+
+          background-color: #3c748e;
+
+        }
+        .tabbar{background-color: #3c748e;} 
+        .ons-tabbar__footer{background-color: #3c748e;} 
+        .ons-swiper-tabbar{background-color: #3c748e;}
         </style>
         
     </head>
@@ -104,8 +113,8 @@
   <!-- home -->
   <template id="home.html">
     <ons-page>
-      <ons-toolbar>
-        <div id = "head"class="center">PSUPin</div>
+      <ons-toolbar style="background-color:#3c748e;">
+        <div id = "head"class="center" style="color:aliceblue;">Pinerest</div>
         <div class="left">
           <ons-toolbar-button onclick="fn.open()">
             <ons-icon icon="fa-bars"></ons-icon>
@@ -114,7 +123,7 @@
       </ons-toolbar>
       </ons-toolbar>
 
-      <ons-tabbar swipeable position="auto">
+      <ons-tabbar swipeable position="auto" style="background-color:#3c748e;">
 
         <ons-tab page="time.html" id="timetab" label="Timeline" icon="fa-home" active></ons-tab>
         <ons-tab page="new.html" label="New Pin" icon="fa-thumb-tack" active-icon="fa-plus-square"></ons-tab>
@@ -195,19 +204,21 @@
       </section>
       <br><br>
       <section style="text-align: center;">
-        <button id="addPic" class="w3-btn w3-ripple w3-yellow" onclick="cam()" style="border-radius:8px;font-size:27px" ><ons-icon size="30px"spin icon="fa-camera-retro"></ons-icon> Take a Photo</button>
+        <button id="addPic" class="w3-btn w3-ripple w3-yellow" onclick="cam()" style="border-radius:2px;font-size:27px" ><ons-icon size="30px"spin icon="fa-camera-retro"></ons-icon> Take a Photo</button>
       </section>
       <br><br>
       <section style="text-align: center;">
-        <button class="w3-btn w3-ripple w3-yellow" style="border-radius:8px;font-size:27px" id="locate" onclick="locate()"> Add Location</button>
+        <button class="w3-btn w3-ripple w3-yellow" style="border-radius:2px;font-size:27px" id="locate" onclick="locate()"> Add Location</button>
       </section>
       <br><br>
+      <ons-card style="border-radius:2px;">
       <section style="padding: 0px;text-align: center;" class="preview-image">
-        <ons-input style="width:80%;" input-id="desc" id="description" modifier="underbar" placeholder="Share what's happen"></ons-input>
+        <ons-input style="width:80%;font-color:black;" input-id="desc" id="description" modifier="underbar" placeholder="Share what's happen"></ons-input>
       </section>
+      </ons-card>
       <br><br>
       <section style="text-align: center;">
-        <button class="w3-btn w3-ripple w3-yellow" style="border-radius:8px;font-size:27px"  onclick="add()"> Post</button>
+        <button class="w3-btn w3-ripple w3-yellow" style="border-radius:2px;font-size:27px"  onclick="add()"> Post</button>
       </section>
       <br><br>
 
@@ -259,25 +270,22 @@
 
 <script id="template" type="x-tmpl-mustache">
 
-  <ons-card>
-      <img src="{{photo}}" style="width:100%;height:100%">
-      <div class="title">
-        Awesome framework
-      </div>
+  <ons-card style="border-radius:2px;background-color:#d8dd8;">
+    <div align="center">
+      <img src="{{photo}}" style="width:90%;height:80%;border-radius:2px;margin-top:15px">
+    </div>
+      <br>
+      <ons-card style="background-color:#c7c7c7;border-radius:2px">
       <div class="content">
         <div>
-          <ons-button id={{id}} value="{{like}}"><ons-icon icon="ion-thumbsup">{{like}}</ons-icon></ons-button>
-          <ons-button class="post-button" modifier="quiet" id="{{id}}"><ons-icon id="button-post-like-2" icon="ion-ios-heart-outline"></ons-icon></ons-button>
-          <ons-button><ons-icon icon="ion-share"></ons-icon></ons-button>
+             <ons-button style="background-color:white;" class="post-button" modifier="quiet" id="{{}}"><ons-icon id="button-post-like-2" icon="ion-ios-heart-outline"></ons-icon></ons-button>
         </div>
         <div>
-            <p align = "left">{{description}}</p>
-            <p align = "left">{{lat}}</p>
-            <p align = "left">{{long}}</p>
-            <p align = "left">{{id}}</p>
+             <p align = "left">{{description}}</p>
         </div>
         
       </div>
+    </ons-card>
     </ons-card>
       <br>
       
