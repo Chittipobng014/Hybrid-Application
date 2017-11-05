@@ -18,6 +18,9 @@
     },
     "cordova-plugin-geolocation": {
       "PACKAGE_NAME": "com.example.application"
+    },
+    "cordova-plugin-console": {
+      "PACKAGE_NAME": "com.example.application"
     }
   },
   "dependent_plugins": {}
