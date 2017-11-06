@@ -16,7 +16,7 @@ var config = {
   //--------------------------------CAMERA-------------------------------------
 
 
-  function cam() {
+function cam() {
 
    
      
@@ -66,14 +66,43 @@ var config = {
    
 }
 
-ons.ready(function() {
-  document.addEventListener("show", function(event){
-    console.log(event.target.id);
-    if(event.target.id=='myPage') { 
-          // Clear your scope variables here or whatever                 
+function check(){
+  var user = firebase.auth().currentUser;
+  if(user){
+      ons.notification.alert("Sign Up Complete");
     }
+}
+
+ons.ready(function() {
+  //------------sign up---------------------------
+  document.addEventListener("click", function(event){
+    console.log(event.target.id);
+    var user = firebase.auth().currentUser;
+    if(event.target.id=='signupBtn') { 
+      if(user) {
+        console.log(user);
+        document.getElementById('signup').hide();
+        console.log("Signed In");    
+        ons.notification.alert("Sign Up Complete");
+        }else{
+          var dialog = document.getElementById('signup');
+          if (dialog) {
+            dialog.show();
+          }
+          else {
+            ons.createDialog('dialog1.html')
+              .then(function (dialog) {
+                dialog.show();
+                
+                                      });
+              }
+        }
+        
+                      
+    }
+    
  });
- 
+ //---------------------sign in------------------------------
  document.addEventListener('postchange', function(event) {
     var tab = event.index;
     console.log(tab);
@@ -82,7 +111,17 @@ ons.ready(function() {
         if (user) {
         console.log(user);
         document.getElementById('signin').hide();
-        console.log("Signed In");    
+        console.log("Signed In");
+        document.addEventListener("click", function(event){
+          console.log(event.target.id);
+          var user = firebase.auth().currentUser;
+          if(event.target.id=='up') {
+            ons.notification.alert("Sign Up Complete");
+          }
+          if(event.target.id=='in'){
+            ons.notification.alert("Sign In Complete");
+          }
+        });    
         
         } else {
           
@@ -94,7 +133,7 @@ ons.ready(function() {
             ons.createDialog('dialog.html')
               .then(function (dialog) {
                 dialog.show();
-                console.log(document.getElementById('signin'));
+                
                                       });
               }     
                        
@@ -104,14 +143,14 @@ ons.ready(function() {
     }
     
     });
-    var user = firebase.auth().currentUser;
-    var name, email, photoUrl, uid, emailVerified;
+    
     
     
 });
 
-function hideDialog(id) {
-  document.getElementById(id).hide;
+function hideDialog() {
+  var dialog = document.getElementById('signup');
+  dialog.hide();
   
 };
 
@@ -327,8 +366,17 @@ function signUp(){
     var errorCode = error.code;
     var errorMessage = error.message;
     // ...
+    if (errorCode === 'auth/wrong-password') {
+      ons.notification.alert('Wrong password.');
+    } else {
+      ons.notification.alert(errorMessage);
+    }
+    console.log(error);
+        
+    
+    
   });
-  
+    
 }
 
 
@@ -359,30 +407,41 @@ function like(pid){
   
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      
-      console.log(user.email);
+      var compare = user.email;
       var db = firebase.firestore();   
-      var firestoreRef = db.collection("pins");
-      firestoreRef.get().then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc){
-            if('"'+user.email+'"' === doc.data().liker){
-              console.log("found");
-              // delete liker  
+      var firestoreRef = db.collection("pins").doc(pid);
+      firestoreRef.get().then(function(doc) {
+          
+            
+            
+            var array = doc.data().liker;
+            for (var index = 0; index <= array.length; index++) {
+              if(compare === doc.data().liker[index]){
+              console.log("found :"+compare);
+              // delete liker
+              break;  
             } else{
-              console.log("not found");
+              
+              console.log("not found :"+compare);
               // add liker
+              break; 
             }
-            // var cityRef = db.collection('pins').doc(pid);
-            // var removeCapital = cityRef.update({
-            //   liker:[user.email]
+            
+              
+            }
+            
+            
+          //   var cityRef = db.collection('pins').doc(pid);
+          //   var removeCapital = cityRef.update({
+          //     liker:[user.email]
           // });
             
                 
            
-            var array = doc.data().liker;
-            console.log(array);
+            var array1 = doc.data().liker;
+            // console.log(array1);
             
-        });
+        
       });
       document.getElementById('signin').hide();
       console.log("Signed In");
