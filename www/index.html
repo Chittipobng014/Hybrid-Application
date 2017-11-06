@@ -24,7 +24,7 @@
         <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         
-        <title>Hello World</title>
+        <title>Pinerest</title>
         <style>
         .page__background{
 
@@ -85,7 +85,7 @@
   <!--Sign In-->
 
 
-<template id="dialog.html">
+ <template id="dialog.html">
     <ons-dialog id="signin">
         <ons-toolbar>
             <div class="center">Sign In</div>
@@ -107,21 +107,21 @@
               
      
     </ons-dialog>
-</template>
+ </template>
 
   <!--Sign Up-->
 
   <template id="dialog1.html">
       <ons-dialog id="signup">
           <ons-toolbar>
-              <div class="center">Sign In</div>
+              <div class="center">Sign Up</div>
           </ons-toolbar><br><br><br>
             <div style="text-align: center; margin-top: 30px;">
               <p>
-                <input id="username1" modifier="underbar" placeholder="Email" float></ons-input>
+                <input id="username2" modifier="underbar" placeholder="Email" float></ons-input>
               </p>
               <p>
-                <input id="password1" modifier="underbar" type="password" placeholder="Password" float></ons-input>
+                <input id="password2" modifier="underbar" type="password" placeholder="Password" float></ons-input>
               </p>
               <p style="margin-top: 30px;">
                 <ons-button onclick="signinWithEmail()">Sign In!</ons-button>
@@ -297,7 +297,7 @@
       <ons-card style="background-color:#c7c7c7;border-radius:2px;width:91%">
       <div class="content">
         <div>
-             <ons-button style="background-color:white;margin-left:8px" class="post-button" onclick="like(this.id)" modifier="quiet" " id="{{id}}"><ons-icon id="button-post-like-2" icon="ion-ios-heart-outline">{{like}}</ons-icon></ons-button>
+             <ons-button style="background-color:white;margin-left:8px" class="post-button" onclick="like(this.id)" modifier="quiet" " id="{{id}}"><ons-icon id="button-post-like-2" icon="ion-ios-heart-outline">{{liker.length}}</ons-icon></ons-button>
         </div>
       <ons-card style="background-color:#ffffff;border-radius:2px;">  
         <div>

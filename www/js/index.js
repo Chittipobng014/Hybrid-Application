@@ -1,87 +1,5 @@
-
-function hideDialog(id) {
-  document.getElementById(id).hide;
-  
-};
-ons.ready(function() {
-  document.addEventListener("show", function(event){
-    console.log(event.target.id);
-    if(event.target.id=='myPage') { 
-          // Clear your scope variables here or whatever                 
-    }
- });
- 
- document.addEventListener('postchange', function(event) {
-    var tab = event.index;
-    console.log(tab);
-    if(tab==1){
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-        console.log(user);
-        document.getElementById('signin').hide();
-     
-        
-        } else {
-          
-          var dialog = document.getElementById('signin');
-          if (dialog) {
-            dialog.show();
-          }
-          else {
-            ons.createDialog('dialog.html')
-              .then(function (dialog) {
-                dialog.show();
-                console.log(document.getElementById('signin'));
-                                      });
-              }     
-                       
-                }
-                
-      });
-    }
-  
-    });
-
-});
-  
-function onLoad() {
-  document.addEventListener("deviceready", onDeviceReady, false);
-}
-
-// device APIs are available
-//
-
-function onDeviceReady() {
-  // Now safe to use device APIs
-  console.log("navigator.geolocation works well");
-    
-  
-    // onSuccess Callback 
-    // This method accepts a Position object, which contains the 
-    // current GPS coordinates 
-    // 
-    var onSuccess = function(position) {
-     
-            ltd = position.coords.latitude;
-            lgt = position.coords.altitude;
-            ons.notification.alert("Success!!");
-  };
-
-  // onError Callback receives a PositionError object 
-  // 
-  function onError(error) {
-      alert('code: '    + error.code    + '\n' +
-            'message: ' + error.message + '\n');
-  }
-
-  navigator.geolocation.getCurrentPosition(onSuccess, onError);
-}
-
-
 var ltd = 0;
-var lgt = 0;  
-
-
+var lgt = 0; 
 var photoURL = null;
 var db;
 var imgCheck = false;
@@ -97,7 +15,8 @@ var config = {
 
   //--------------------------------CAMERA-------------------------------------
 
-function cam() {
+
+  function cam() {
 
    
      
@@ -146,6 +65,95 @@ function cam() {
      }
    
 }
+
+ons.ready(function() {
+  document.addEventListener("show", function(event){
+    console.log(event.target.id);
+    if(event.target.id=='myPage') { 
+          // Clear your scope variables here or whatever                 
+    }
+ });
+ 
+ document.addEventListener('postchange', function(event) {
+    var tab = event.index;
+    console.log(tab);
+    if(tab==1){
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+        console.log(user);
+        document.getElementById('signin').hide();
+        console.log("Signed In");    
+        
+        } else {
+          
+          var dialog = document.getElementById('signin');
+          if (dialog) {
+            dialog.show();
+          }
+          else {
+            ons.createDialog('dialog.html')
+              .then(function (dialog) {
+                dialog.show();
+                console.log(document.getElementById('signin'));
+                                      });
+              }     
+                       
+                }
+                
+      });
+    }
+    
+    });
+    var user = firebase.auth().currentUser;
+    var name, email, photoUrl, uid, emailVerified;
+    
+    
+});
+
+function hideDialog(id) {
+  document.getElementById(id).hide;
+  
+};
+
+  
+function onLoad() {
+  document.addEventListener("deviceready", onDeviceReady, false);
+}
+
+// device APIs are available
+//
+
+function onDeviceReady() {
+  // Now safe to use device APIs
+  console.log("navigator.geolocation works well");
+    
+  
+    // onSuccess Callback 
+    // This method accepts a Position object, which contains the 
+    // current GPS coordinates 
+    // 
+    var onSuccess = function(position) {
+     
+            ltd = position.coords.latitude;
+            lgt = position.coords.longitude;
+            ons.notification.alert("Success!!"+ltd+lgt);
+  };
+
+  // onError Callback receives a PositionError object 
+  // 
+  function onError(error) {
+      alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+
+
+ 
+
+
+
 //-------------------------------------Location---------------------------------
 function locate(){
 
@@ -184,7 +192,7 @@ function add(){
     long: lgt,
     poster: name = user.email,
     time: today,
-    liker: [""],
+    liker: [],
     like: 0
 
   });
@@ -214,16 +222,16 @@ $(function(){
           
 
     });
-  })  
+ });  
 
-
-});
+ 
+ });
 
 //---------------------------------------------Map--------------------------------------
 
 function initMap() {
                
-                var uluru = {lat: 0, lng: 0};
+                var uluru = {lat: ltd, lng: lgt};
                 var map = new google.maps.Map(document.getElementById('map'), {
                   zoom: 16,
                   center: uluru
@@ -276,6 +284,7 @@ function signinWithEmail(){
   var email = document.getElementById('username1').value;
   var password = document.getElementById('password1').value;
   firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -287,23 +296,32 @@ function signinWithEmail(){
     }
     console.log(error);
     
+    
+      
+        
+      
+    
     // [END_EXCLUDE]
   });
   // [END authwithemail]
+
+  
+  
 }
 
 
 function signout(){
 
   firebase.auth().signOut();
+  console.log("Signed Out");
   
 
 }
 
 
 function signUp(){
-  var email = document.getElementById('username').value;
-  var password = document.getElementById('password').value;
+  var email = document.getElementById('username2').value;
+  var password = document.getElementById('password2').value;
   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
@@ -347,22 +365,27 @@ function like(pid){
       var firestoreRef = db.collection("pins");
       firestoreRef.get().then(function(querySnapshot) {
           querySnapshot.forEach(function(doc){
-            // if(liker === doc.data().like){
-            //   // delete liker  
-            // } else{
-            //   // add liker
-            // }
-            var cityRef = db.collection('pins').doc(pid);
-            var removeCapital = cityRef.update({
-              liker:[user.email]
-          });
+            if('"'+user.email+'"' === doc.data().liker){
+              console.log("found");
+              // delete liker  
+            } else{
+              console.log("not found");
+              // add liker
+            }
+            // var cityRef = db.collection('pins').doc(pid);
+            // var removeCapital = cityRef.update({
+            //   liker:[user.email]
+          // });
             
                 
            
-            var array = doc.data().like;
+            var array = doc.data().liker;
             console.log(array);
+            
         });
       });
+      document.getElementById('signin').hide();
+      console.log("Signed In");
     } else {
       var dialog = document.getElementById('signin');
       if (dialog) {
