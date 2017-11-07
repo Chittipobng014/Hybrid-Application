@@ -44,7 +44,7 @@
 
 
 
-  <body onload="onLoad()">
+  <body>
     <!--Side mmenu-->
   <ons-splitter>
     <ons-splitter-side id="menu" side="left" width="220px" collapse>
@@ -146,8 +146,8 @@
       <ons-toolbar style="background-color:#3c748e;">
         <div id = "head"class="center" style="color:aliceblue;">Pinerest</div>
         <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="fa-bars"></ons-icon>
+          <ons-toolbar-button id="side" onclick="fn.open()">
+            <ons-icon id="side" icon="fa-bars"></ons-icon>
           </ons-toolbar-button>
         </div>
       </ons-toolbar>
@@ -308,13 +308,13 @@
   <ons-card style="border-radius:2px;background-color:#d8dd8;border:0px">
       <ons-list-item class="post_title" style="border:0px;">
           <div class="left">            
-            <img class="list-item__thumbnail" src={{posterPhoto}} style="width:48px ;height:48px ;border-radius:50%;">
+            <img class="list-item__thumbnail" src={{posterPhoto}} style="width:48px;height:48px;border-radius:50%;">
           </div>
           <div class="center">
             <div class="list-item__title"><b>{{poster}}</b></div>
             <div class="list-item__subtitle" style="font-size: 12px">{{time}}</div>
           </div>
-          <div class="right"><ons-button id="{{id}}"" onclick="deletePost(this.id)" class="corner-button" modifier="quiet"><ons-icon icon="ion-ios-more,material:ion-android-more-vertical"></ons-icon></ons-button></div>
+          <div class="right"><ons-button id="{{id}}"" onclick="deletePost(this.id)" class="corner-button" modifier="quiet">Delete Post</ons-button></div>
         </ons-list-item>
      
     <div align="center">

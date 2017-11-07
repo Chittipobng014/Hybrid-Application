@@ -80,16 +80,141 @@ function check(){
   var displayName = user.displayName;
   
   var photoURL = user.photoURL;
+  console.log(displayName+photoURL);
  }, function(error) {
   
  });
     }
 }
 
+$(document).ready(function (){
+  $(function (){
+  //   document.addEventListener('postchange', function(event) {
+  //     var tab = event.index;
+  //     console.log(tab);
+  //     if(tab ==2){
+  //       initMap();
+  //  }
+  //  });
+  //   //-----------------------------------------------------------------------------
+  //   var onSuccess = function(position) {
+      
+  //            ltd += position.coords.latitude;
+  //            lgt += position.coords.longitude;
+  //            console.log(ltd+"\n"+lgt);
+             
+             
+  //  };
+  
+  //  // onError Callback receives a PositionError object 
+  //  // 
+  //  function onError(error) {
+  //      ons.notification.alert('code: '    + error.code    + '\n' +
+  //            'message: ' + error.message + '\n');
+  //  }
+  
+  //  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  
+    //---------------------------------------------------------------------------------------
+    document.addEventListener('postchange', function(event) {
+      var tab = event.index;
+      console.log(tab);
+      if(tab !=0 && tab !=2){
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+      console.log(user);
+      document.getElementById('signin').hide();
+      document.getElementById('signup').hide();
+      console.log("Signed In");
+      document.addEventListener("click", function(event){
+        console.log(event.target.id);
+       
+      });    
+      
+      } else {
+        
+        var dialog = document.getElementById('signin');
+        if (dialog) {
+          dialog.show();
+        }
+        else {
+          ons.createDialog('dialog.html')
+            .then(function (dialog) {
+              dialog.show();
+              
+                                    });
+            }     
+                     
+              }
+              
+    });
+  }
+  });
+
+  });
+});
+
 ons.ready(function() {
+  //-----------------------------------------------------------------------------
+   document.addEventListener('postchange', function(event) {
+     var tab = event.index;
+     console.log(tab);
+     if(tab ==2){
+       initMap();
+  
+   //-----------------------------------------------------------------------------
+   function onSuccess(position) {
+    
+            ltd = position.coords.latitude;
+            lgt = position.coords.longitude;
+            initMap();
+           
+           
+  }; 
+
+  // onError Callback receives a PositionError object 
+  // 
+  function onError(error) {
+      ons.notification.alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+ }
+ });
+ 
+  //-------------------------side menu---------------------------
+  document.addEventListener("click", function(event){
+    console.log(event.target.onclick);
+    if(event.target.id=='side') { 
+      firebase.auth().onAuthStateChanged(function(user) {
+      if(user) {
+        console.log(user);
+        document.getElementById('signin').hide();
+        console.log("Signed In");    
+        
+        }else{
+          var dialog = document.getElementById('signin');
+          if (dialog) {
+            dialog.show();
+          }
+          else {
+            ons.createDialog('dialog.html')
+              .then(function (dialog) {
+                dialog.show();
+                
+                                      });
+              }
+        }
+      }); 
+                      
+    }
+    
+ });
+
   //------------sign up---------------------------
   document.addEventListener("click", function(event){
-    console.log(event.target.id);
+    console.log(event.target.value);
     var user = firebase.auth().currentUser;
     if(event.target.id=='signupBtn') { 
       if(user) {
@@ -116,46 +241,46 @@ ons.ready(function() {
     
  });
  //---------------------sign in------------------------------
- document.addEventListener('postchange', function(event) {
-    var tab = event.index;
-    console.log(tab);
-    if(tab==1){
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-        console.log(user);
-        document.getElementById('signin').hide();
-        console.log("Signed In");
-        document.addEventListener("click", function(event){
-          console.log(event.target.id);
-          var user = firebase.auth().currentUser;
-          if(event.target.id=='up') {
-            ons.notification.alert("Sign Up Complete");
-          }
-          if(event.target.id=='in'){
-            ons.notification.alert("Sign In Complete");
-          }
-        });    
+ //  document.addEventListener('postchange', function(event) {
+ //     var tab = event.index;
+ //     console.log(tab);
+ //     if(tab==1){
+ //       firebase.auth().onAuthStateChanged(function(user) {
+ //         if (user) {
+ //         console.log(user);
+ //         document.getElementById('signin').hide();
+ //         console.log("Signed In");
+ //         document.addEventListener("click", function(event){
+ //           console.log(event.target.id);
+ //           var user = firebase.auth().currentUser;
+ //           if(event.target.id=='up') {
+ //             ons.notification.alert("Sign Up Complete");
+ //           }
+ //           if(event.target.id=='in'){
+ //             ons.notification.alert("Sign In Complete");
+ //           }
+ //         });    
         
-        } else {
+ //         } else {
           
-          var dialog = document.getElementById('signin');
-          if (dialog) {
-            dialog.show();
-          }
-          else {
-            ons.createDialog('dialog.html')
-              .then(function (dialog) {
-                dialog.show();
+ //           var dialog = document.getElementById('signin');
+ //           if (dialog) {
+ //             dialog.show();
+ //           }
+ //           else {
+ //             ons.createDialog('dialog.html')
+ //               .then(function (dialog) {
+ //                 dialog.show();
                 
-                                      });
-              }     
+ //                                       });
+ //               }     
                        
-                }
+ //                 }
                 
-      });
-    }
+ //       });
+ //     }
     
-    });
+ //     });
     
     
     
@@ -173,10 +298,13 @@ function onLoad() {
   document.addEventListener("deviceready", onDeviceReady, false);
 }
 
-// device APIs are available
-//
+//device APIs are available
+
 
 function onDeviceReady() {
+
+  ons.notification.alert("Device Is Ready");
+
   // Now safe to use device APIs
   console.log("navigator.geolocation works well");
     
@@ -186,31 +314,26 @@ function onDeviceReady() {
     // current GPS coordinates 
     // 
     var onSuccess = function(position) {
-     
-            ltd = position.coords.latitude;
-            lgt = position.coords.longitude;
-            ons.notification.alert("Success!!");
-  };
-
-  // onError Callback receives a PositionError object 
-  // 
-  function onError(error) {
-      alert('code: '    + error.code    + '\n' +
-            'message: ' + error.message + '\n');
-  }
-
-  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+      
+             ltd += position.coords.latitude;
+             lgt += position.coords.longitude;
+             console.log(ltd+"\n"+lgt);
+             initMap();
+             
+   };
+  
+   // onError Callback receives a PositionError object 
+   // 
+   function onError(error) {
+     ons.notification.alert('code: '    + error.code    + '\n' +
+             'message: ' + error.message + '\n');
+   }
+  
+   navigator.geolocation.getCurrentPosition(onSuccess, onError);
 }
 function currentLocation() {
-  // Now safe to use device APIs
-  console.log("navigator.geolocation works well");
-    
   
-    // onSuccess Callback 
-    // This method accepts a Position object, which contains the 
-    // current GPS coordinates 
-    // 
-    var onSuccess = function(position) {
+  function onSuccess(position) {
      
             ltd = position.coords.latitude;
             lgt = position.coords.longitude;
@@ -242,7 +365,7 @@ function locate(){
 //---------------------------------------Post----------------------------------------
 
 function add(){
-  if(imgCheck===true && ltd!=0 && lgt!=0){
+  if(imgCheck===true){
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -311,50 +434,50 @@ $(function(){
 
 function initMap() {
                
-                var uluru = {lat: ltd, lng: lgt};
+                var pos = {lat: ltd, lng: lgt};
                 var map = new google.maps.Map(document.getElementById('map'), {
                   zoom: 16,
-                  center: uluru
+                  center: pos
                 });
                 
                 
-  //                infoWindow = new google.maps.InfoWindow;
+                 infoWindow = new google.maps.InfoWindow;
                 
                 
                 
-  //                            if (navigator.geolocation) {
-  //                            navigator.geolocation.getCurrentPosition(function(position) {
-  //                            ltd= position.coords.latitude;
-  //                            lgt= position.coords.longitude;
-  //                            var pos = {
-  //                            lat: position.coords.latitude,
-  //                            lng: position.coords.longitude
-  //                            };
-  //                            var marker = new google.maps.Marker({
-  //                            position: pos,
-  //                            map: map
-  //                            });
-  //                           google.maps.event.addListener(marker, "Marker", function() {
-  //                            infoWindow.open(map,marker);
-  //                            });
-  //                            infoWindow.open(map);
-  //                            map.setCenter(pos);
-  //                            }, function() {
-  //                            handleLocationError(true, infoWindow, map.getCenter());
-  //                            });
-  //                            } else {
-  //                            // Browser doesn't support Geolocation
-  //                            handleLocationError(false, infoWindow, map.getCenter());
-  //                            }
+                             if (navigator.geolocation) {
+                             navigator.geolocation.getCurrentPosition(function(position) {
+                             ltd= position.coords.latitude;
+                             lgt= position.coords.longitude;
+                             var pos = {
+                             lat: position.coords.latitude,
+                             lng: position.coords.longitude
+                             };
+                             var marker = new google.maps.Marker({
+                             position: pos,
+                             map: map
+                             });
+                            google.maps.event.addListener(marker, "Marker", function() {
+                             infoWindow.open(map,marker);
+                             });
+                             infoWindow.open(map);
+                             map.setCenter(pos);
+                             }, function() {
+                             handleLocationError(true, infoWindow, map.getCenter());
+                             });
+                             } else {
+                             // Browser doesn't support Geolocation
+                             handleLocationError(false, infoWindow, map.getCenter());
+                             }
                         
-  //               }
+                }
                 
-  //                        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  //                          infoWindow.setPosition(pos);
-  //                          infoWindow.setContent(browserHasGeolocation ?
-  //                                                'Error: The Geolocation service failed.' :
-  //                                                'Error: Your browser doesn\'t support geolocation.');
-  //                          infoWindow.open(map);
+                           function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                           infoWindow.setPosition(pos);
+                           infoWindow.setContent(browserHasGeolocation ?
+                                                 'Error: The Geolocation service failed.' :
+                                                 'Error: Your browser doesn\'t support geolocation.');
+                           infoWindow.open(map);
   }
               
             
@@ -374,12 +497,7 @@ function signinWithEmail(){
     } else {
       alert(errorMessage);
     }
-    console.log(error);
-    
-    
-      
-        
-      
+      console.log(error);
     
     // [END_EXCLUDE]
   });
@@ -417,7 +535,13 @@ function signUp(){
     
     
   });
-    
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      check();
+    } else {
+      // No user is signed in.
+    }
+  });  
 }
 
 
@@ -425,7 +549,7 @@ function signUp(){
 
 
 
-
+var object = new Object();
 //----------------------------------------------DeletePost-----------------------------------
 function deletePost(id){
   firebase.auth().onAuthStateChanged(function(user) {
@@ -476,7 +600,10 @@ function like(pid){
             var array = doc.data().liker;
             var lastindex = array.length;
             var arrayLength = Object.keys(array).length-1;
-                       
+            
+            var timestamp = Number(new Date());
+            object[timestamp] = "test";
+            console.log(object);           
             var found = Object.keys(array).some(function (k) {
               if (array[k] === compare) {
                 
@@ -531,7 +658,7 @@ function like(pid){
   
   
   
-  location.reload(); 
+  // location.reload(); 
 }
 
 function reload(){

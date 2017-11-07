@@ -16,12 +16,16 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.example.application"
     },
-    "cordova-plugin-geolocation": {
+    "cordova-plugin-console": {
       "PACKAGE_NAME": "com.example.application"
     },
-    "cordova-plugin-console": {
+    "cordova-plugin-geolocation": {
       "PACKAGE_NAME": "com.example.application"
     }
   },
-  "dependent_plugins": {}
+  "dependent_plugins": {
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.example.application"
+    }
+  }
 }

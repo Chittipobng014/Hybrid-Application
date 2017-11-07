@@ -24,8 +24,8 @@
       "cordova-plugin-camera": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-firebase": {},
-      "cordova-plugin-geolocation": {},
-      "cordova-plugin-console": {}
+      "cordova-plugin-console": {},
+      "cordova-plugin-geolocation": {}
     },
     "platforms": [
       "android"
