@@ -1,6 +1,6 @@
 var ltd = 0;
 var lgt = 0; 
-var photoURL = null;
+var photoUrl = "https://html.com/wp-content/uploads/very-large-flamingo.jpg";
 var db;
 var imgCheck = false;
 var config = {
@@ -10,9 +10,11 @@ var config = {
     projectId: "fir-e5e4e",
     storageBucket: "fir-e5e4e.appspot.com",
     messagingSenderId: "489270372821"
- };
-  firebase.initializeApp(config);
+  };
+firebase.initializeApp(config);
 
+  
+  
   //--------------------------------CAMERA-------------------------------------
 
 
@@ -52,7 +54,7 @@ function cam() {
       
       photoRef.put(blob).then(function (snapshot) {
       photoRef.getDownloadURL().then(function (url) {
-      photoURL = url;
+      photoUrl = url;
       imgCheck = true;
       ons.notification.alert(url);
           $("#preview").attr("src", url);
@@ -69,7 +71,18 @@ function cam() {
 function check(){
   var user = firebase.auth().currentUser;
   if(user){
-      ons.notification.alert("Sign Up Complete");
+      // Updates the user attributes:
+ user.updateProfile({
+  displayName: user.email,
+  photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2RZRW7ET_aWFSC6Za6Nk_QtaiSlVHYU6JSUf1PJMYA3SvKFTOpQ"
+ }).then(function() {
+  
+  var displayName = user.displayName;
+  
+  var photoURL = user.photoURL;
+ }, function(error) {
+  
+ });
     }
 }
 
@@ -151,6 +164,7 @@ ons.ready(function() {
 function hideDialog() {
   var dialog = document.getElementById('signup');
   dialog.hide();
+  check();
   
 };
 
@@ -203,7 +217,7 @@ function locate(){
 //---------------------------------------Post----------------------------------------
 
 function add(){
-  if(imgCheck===true){
+  if(imgCheck===false){
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -225,23 +239,25 @@ function add(){
   if(user != null){
   db.collection("pins").doc("'"+timestamp+"'").set({
     id: timestamp,
-    photo: photoURL,
+    photo: photoUrl,
     description: description,
     lat: ltd,
     long: lgt,
-    poster: name = user.email,
+    poster: user.displayName,
+    posterPhoto: user.photoURL,
     time: today,
     liker: [],
-    like: 0
+    like: 0,
+    posterId: user.uid
 
   });
 
  }
-  
+ location.reload(); 
 
  }else{
   ons.notification.alert("Photo must have")
-}
+ }
 } 
 //---------------------------------------------Timeline----------------------------------
 $(function(){
@@ -387,18 +403,36 @@ function signUp(){
 
 //----------------------------------------------DeletePost-----------------------------------
 function deletePost(id){
-  console.log(id);
-  var did = id;
-  var db = firebase.firestore();
-  
-  db.collection("pins").doc(did).delete().then(function() {
-    console.log("Document successfully deleted!");
-  }).catch(function(error) {
-    console.error("Error removing document: ", error);
-  });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var compare = user.email;
+      var db = firebase.firestore();   
+      var firestoreRef = db.collection("pins").doc(id);
+      firestoreRef.get().then(function(doc) {
+      var posteruid = doc.data().posterId;
+      if(posteruid == user.uid){
+        console.log(id);
+        var did = id;
+        var db = firebase.firestore();  
+      db.collection("pins").doc(did).delete().then(function() {
+        ons.notification.alert("Document successfully deleted!");
+    }).catch(function(error) {
+      console.error("Error removing document: ", error);
+    });
+    location.reload();
 
+      }else{
+        ons.notification.alert("This is not your post!");
+        console.log(posteruid);
+      }
+
+
+      });
+}else{
+  ons.notification.alert("This is not your post!");
 }
-
+  });
+  }
 
 function like(pid){
   console.log(pid);
@@ -411,35 +445,43 @@ function like(pid){
       var db = firebase.firestore();   
       var firestoreRef = db.collection("pins").doc(pid);
       firestoreRef.get().then(function(doc) {
-          
+      var indexofKey =null;    
             
             
             var array = doc.data().liker;
-            for (var index = 0; index <= array.length; index++) {
-              if(compare === doc.data().liker[index]){
-              console.log("found :"+compare);
-              // delete liker
-              break;  
-            } else{
-              
-              console.log("not found :"+compare);
-              // add liker
-              break; 
-            }
+            var lastindex = array.length;
+            var arrayLength = Object.keys(array).length-1;
+                       
+            var found = Object.keys(array).some(function (k) {
+              if (array[k] === compare) {
+                
+                indexofKey = k;
+                  return true;
+              }else{
+                
+                return false;
+              }
+          });
+          if(indexofKey != null){
+            //Delete
+          }else{
+            //Add
+            var timestamp = Number(new Date());
             
-              
-            }
-            
-            
-          //   var cityRef = db.collection('pins').doc(pid);
-          //   var removeCapital = cityRef.update({
-          //     liker:[user.email]
-          // });
+            var lastindex = indexofKey+1;
+            var update = new Object();
+            update[timestamp]= compare;
+            firestoreRef.update({
+              liker: update
+            });
+          }
             
                 
-           
+            
             var array1 = doc.data().liker;
-            // console.log(array1);
+            
+            console.log(indexofKey);
+            console.log(Object.getOwnPropertyDescriptor(array1, 8));
             
         
       });
@@ -464,5 +506,81 @@ function like(pid){
   
   
   
+  location.reload(); 
+}
 
+function reload(){
+  location.reload();
+}
+
+function updateDisplayName(){
+  var user = firebase.auth().currentUser;
+  var name = document.getElementById('displayName').value;
+  
+  if(user){
+      // Updates the user attributes:
+ user.updateProfile({
+
+  displayName: name  
+
+ }).then(function() {
+  
+  var displayName = user.displayName;
+  
+    
+  console.log(displayName);
+  if(displayName == name){
+    ons.notification.alert("Success");
+  }
+  
+ }, function(error) {
+  
+ });
+    }
+}
+var displayPhotoUpload;
+
+function upload(){
+  var photo = $("#photoUpload").prop("files")[0];
+  var storage = firebase.storage();
+  var storageRef = firebase.storage().ref();
+  var timestamp = Number(new Date());
+  var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
+      photoRef.put(photo).then(function (snapshot) {
+      photoRef.getDownloadURL().then(function (url) {
+      displayPhotoUpload = url
+      $("#previewDisplay").attr("src", displayPhotoUpload);
+      })
+  });
+  console.log(displayPhotoUpload);  
+  }
+
+function updatePhotoDisplay(){
+  
+  
+  var user = firebase.auth().currentUser;
+  
+  
+  
+
+  if(user){
+    // Updates the user attributes:
+ user.updateProfile({
+ 
+  photoURL: displayPhotoUpload
+
+ }).then(function() {
+
+  var photoURL = user.photoURL;
+
+ console.log(photoURL);
+ 
+ if(photoURL == displayPhotoUpload){
+  ons.notification.alert("Success");
+ }
+
+ }, function(error) {
+
+ });
+  }
 }
