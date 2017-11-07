@@ -1,6 +1,6 @@
 var ltd = 0;
 var lgt = 0; 
-var photoUrl = "https://html.com/wp-content/uploads/very-large-flamingo.jpg";
+var photoUrl = null;
 var db;
 var imgCheck = false;
 var config = {
@@ -189,7 +189,32 @@ function onDeviceReady() {
      
             ltd = position.coords.latitude;
             lgt = position.coords.longitude;
-            ons.notification.alert("Success!!"+ltd+lgt);
+            ons.notification.alert("Success!!");
+  };
+
+  // onError Callback receives a PositionError object 
+  // 
+  function onError(error) {
+      alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+function currentLocation() {
+  // Now safe to use device APIs
+  console.log("navigator.geolocation works well");
+    
+  
+    // onSuccess Callback 
+    // This method accepts a Position object, which contains the 
+    // current GPS coordinates 
+    // 
+    var onSuccess = function(position) {
+     
+            ltd = position.coords.latitude;
+            lgt = position.coords.longitude;
+            ons.notification.alert("Success!!");
   };
 
   // onError Callback receives a PositionError object 
@@ -217,7 +242,7 @@ function locate(){
 //---------------------------------------Post----------------------------------------
 
 function add(){
-  if(imgCheck===false){
+  if(imgCheck===true && ltd!=0 && lgt!=0){
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -256,7 +281,7 @@ function add(){
  location.reload(); 
 
  }else{
-  ons.notification.alert("Photo must have")
+  ons.notification.alert("Information Must Have")
  }
 } 
 //---------------------------------------------Timeline----------------------------------
@@ -428,9 +453,9 @@ function deletePost(id){
 
 
       });
-}else{
+ }else{
   ons.notification.alert("This is not your post!");
-}
+ }
   });
   }
 

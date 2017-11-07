@@ -24,7 +24,7 @@
         <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         
-        <title>Hello World</title>
+        <title>Pinerest</title>
         <style>
         .page__background{
 
@@ -51,15 +51,18 @@
       <ons-page>
         <div class="header-part">
           <ons-button modifier="quiet">
-            <img style="height: 40px; width: 40px" class="profile-thumbnail" src="http://placekitten.com/g/70/70">
-          </ons-button>
-        </div>
-        <div class="header-part">Ugly Kitty</div>
-        <div class="header-part subheader" style="margin-top: 2px">@uKitty</div>
+            <h1>Pinerest</h1>
         </div>
         <ons-list>
-         
-          <ons-list-item modifier="nodivider" onclick="fn.open('profile.html')" tappable>
+          <ons-list-item modifier="nodivider" onclick="fn.open('home.html')" tappable>
+            <div class="left">
+              <ons-icon icon="ion-person"></ons-icon>
+            </div>
+            <div class="center">
+              Home
+            </div>
+          </ons-list-item>
+          <ons-list-item modifier="nodivider" onclick="fn.load('profile.html')" tappable>
             <div class="left">
               <ons-icon icon="ion-person"></ons-icon>
             </div>
@@ -85,7 +88,7 @@
   <!--Sign In-->
 
 
-<template id="dialog.html">
+ <template id="dialog.html">
     <ons-dialog id="signin">
         <ons-toolbar>
             <div class="center">Sign In</div>
@@ -98,35 +101,35 @@
               <input id="password1" modifier="underbar" type="password" placeholder="Password" float></ons-input>
             </p>
             <p style="margin-top: 30px;">
-              <ons-button onclick="signinWithEmail()">Sign In!</ons-button>
+              <ons-button id="in" onclick="signinWithEmail()">Sign In!</ons-button>
             
-              <ons-button onclick="signout()">Sign Up!</ons-button>
+              <ons-button id="signupBtn" onclick="">Sign Up!</ons-button>
             </p>
             
           </div>
               
      
     </ons-dialog>
-</template>
+ </template>
 
   <!--Sign Up-->
 
   <template id="dialog1.html">
       <ons-dialog id="signup">
           <ons-toolbar>
-              <div class="center">Sign In</div>
+              <div class="center">Sign Up</div>
           </ons-toolbar><br><br><br>
             <div style="text-align: center; margin-top: 30px;">
               <p>
-                <input id="username1" modifier="underbar" placeholder="Email" float></ons-input>
+                <input id="username2" modifier="underbar" placeholder="Email" float></ons-input>
               </p>
               <p>
-                <input id="password1" modifier="underbar" type="password" placeholder="Password" float></ons-input>
+                <input id="password2" modifier="underbar" type="password" placeholder="Password" float></ons-input>
               </p>
               <p style="margin-top: 30px;">
-                <ons-button onclick="signinWithEmail()">Sign In!</ons-button>
+                <ons-button  id="up" onclick="signUp()">Sign Up!</ons-button>
               
-                <ons-button onclick="signout()">Sign Up!</ons-button>
+                <ons-button id="close" onclick="hideDialog()">Close</ons-button>
               </p>
               
             </div>
@@ -166,7 +169,7 @@
     <ons-page>
       <ons-toolbar>
         <div class="left">
-          <ons-back-button onclick="goBack()">Back</ons-back-button>
+          <ons-back-button onclick="reload()">Back</ons-back-button>
         </div>
 
         <div class="center bold">
@@ -175,6 +178,31 @@
 
 
       </ons-toolbar>
+      <ons-card>
+      <div style="text-align: center; margin-top: 30px;">
+        <p>Change Display Name</p>
+        <p>
+          <ons-input id="displayName" modifier="underbar" placeholder="" float></ons-input>
+        </p>
+        
+        <p style="margin-top: 30px;">
+          <ons-button onclick="updateDisplayName()">Change</ons-button>
+        </p>
+      </div>
+    </ons-card>
+    <ons-card>
+        <div style="text-align: center; margin-top: 30px;">
+          <p>Change Photo</p>
+          <img id="previewDisplay" src=https://vignette.wikia.nocookie.net/walkingdead/images/0/03/Flag_Blank.svg/revision/latest?cb=20130321092939 style="width:72px ;height:72px ;border-radius:50%;">
+          <p>
+              <input id="photoUpload" type="file" class="form-control" aria-describedby="emailHelp" placeholder="Select a photo">
+          </p>
+          
+          <p style="margin-top: 30px;">
+              <ons-button onclick="upload()">Upload</ons-button><ons-button onclick="updatePhotoDisplay()">Change</ons-button>
+          </p>
+        </div>
+      </ons-card>
     </ons-page>
   </template>
 
@@ -215,7 +243,7 @@
       </section>
       <br><br>
       <section style="text-align: center;">
-        <button class="w3-btn w3-ripple w3-yellow" style="border-radius:2px;font-size:27px" id="locate" onclick="onDeviceReady()"> Add Location</button>
+        <button class="w3-btn w3-ripple w3-yellow" style="border-radius:2px;font-size:27px" id="locate" onclick="currentLocation()"> Add Location</button>
       </section>
       <br><br>
       <ons-card style="border-radius:2px;margin-left:15px;margin-right:15px">
@@ -280,13 +308,13 @@
   <ons-card style="border-radius:2px;background-color:#d8dd8;border:0px">
       <ons-list-item class="post_title" style="border:0px;">
           <div class="left">            
-            <img class="list-item__thumbnail" src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" style="width:48px ;height:48px ;border-radius:50%;">
+            <img class="list-item__thumbnail" src={{posterPhoto}} style="width:48px ;height:48px ;border-radius:50%;">
           </div>
           <div class="center">
             <div class="list-item__title"><b>{{poster}}</b></div>
             <div class="list-item__subtitle" style="font-size: 12px">{{time}}</div>
           </div>
-          <div class="right"><ons-button class="corner-button" modifier="quiet"><ons-icon icon="ion-ios-more,material:ion-android-more-vertical"></ons-icon></ons-button></div>
+          <div class="right"><ons-button id="{{id}}"" onclick="deletePost(this.id)" class="corner-button" modifier="quiet"><ons-icon icon="ion-ios-more,material:ion-android-more-vertical"></ons-icon></ons-button></div>
         </ons-list-item>
      
     <div align="center">
@@ -297,12 +325,13 @@
       <ons-card style="background-color:#c7c7c7;border-radius:2px;width:91%">
       <div class="content">
         <div>
-             <ons-button style="background-color:white;" class="post-button"  modifier="quiet" " id="{{id}}"><ons-icon id="button-post-like-2" icon="ion-ios-heart-outline"></ons-icon></ons-button>
+             <ons-button style="background-color:white;margin-left:8px" class="post-button" onclick="like(this.id)" modifier="quiet" " id="{{id}}"><ons-icon id="button-post-like-2" icon="ion-ios-heart-outline">{{liker.length}}</ons-icon></ons-button>
         </div>
+      <ons-card style="background-color:#ffffff;border-radius:2px;">  
         <div>
              <p align = "left">{{description}}</p>
         </div>
-        
+      </ons-card>  
       </div>
     </ons-card>
   </div>

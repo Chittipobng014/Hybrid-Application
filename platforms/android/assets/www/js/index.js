@@ -1,90 +1,8 @@
-
-function hideDialog(id) {
-  document.getElementById(id).hide;
-  
-};
-ons.ready(function() {
-  document.addEventListener("show", function(event){
-    console.log(event.target.id);
-    if(event.target.id=='myPage') { 
-          // Clear your scope variables here or whatever                 
-    }
-});
- 
- document.addEventListener('postchange', function(event) {
-    var tab = event.index;
-    console.log(tab);
-    if(tab==1){
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-        console.log(user);
-        document.getElementById('signin').hide();
-     
-        
-        } else {
-          
-          var dialog = document.getElementById('signin');
-          if (dialog) {
-            dialog.show();
-          }
-          else {
-            ons.createDialog('dialog.html')
-              .then(function (dialog) {
-                dialog.show();
-                console.log(document.getElementById('signin'));
-                                      });
-              }     
-                       
-                }
-                
-      });
-    }
-  
-    });
-
-  });
-  
-function onLoad() {
-  document.addEventListener("deviceready", onDeviceReady, false);
-}
-
-// device APIs are available
-//
-
-function onDeviceReady() {
-  // Now safe to use device APIs
-  console.log("navigator.geolocation works well");
-    
-  
-    // onSuccess Callback 
-    // This method accepts a Position object, which contains the 
-    // current GPS coordinates 
-    // 
-    var onSuccess = function(position) {
-     
-            ltd = position.coords.latitude;
-            lgt = position.coords.altitude;
-            ons.notification.alert("Success!!");
-  };
-
-  // onError Callback receives a PositionError object 
-  // 
-  function onError(error) {
-      alert('code: '    + error.code    + '\n' +
-            'message: ' + error.message + '\n');
-  }
-
-  navigator.geolocation.getCurrentPosition(onSuccess, onError);
-}
-
-
 var ltd = 0;
-var lgt = 0;  
-
-
-var photoURL = null;
+var lgt = 0; 
+var photoUrl = null;
 var db;
-var imgCheck;
+var imgCheck = false;
 var config = {
     apiKey: "AIzaSyASZCb_OgmtwpSyea4_j5hhKu5XYYvTzmU",
     authDomain: "fir-e5e4e.firebaseapp.com",
@@ -92,10 +10,13 @@ var config = {
     projectId: "fir-e5e4e",
     storageBucket: "fir-e5e4e.appspot.com",
     messagingSenderId: "489270372821"
- };
-  firebase.initializeApp(config);
+  };
+firebase.initializeApp(config);
 
+  
+  
   //--------------------------------CAMERA-------------------------------------
+
 
 function cam() {
 
@@ -133,7 +54,7 @@ function cam() {
       
       photoRef.put(blob).then(function (snapshot) {
       photoRef.getDownloadURL().then(function (url) {
-      photoURL = url;
+      photoUrl = url;
       imgCheck = true;
       ons.notification.alert(url);
           $("#preview").attr("src", url);
@@ -146,6 +67,171 @@ function cam() {
      }
    
 }
+
+function check(){
+  var user = firebase.auth().currentUser;
+  if(user){
+      // Updates the user attributes:
+ user.updateProfile({
+  displayName: user.email,
+  photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2RZRW7ET_aWFSC6Za6Nk_QtaiSlVHYU6JSUf1PJMYA3SvKFTOpQ"
+ }).then(function() {
+  
+  var displayName = user.displayName;
+  
+  var photoURL = user.photoURL;
+ }, function(error) {
+  
+ });
+    }
+}
+
+ons.ready(function() {
+  //------------sign up---------------------------
+  document.addEventListener("click", function(event){
+    console.log(event.target.id);
+    var user = firebase.auth().currentUser;
+    if(event.target.id=='signupBtn') { 
+      if(user) {
+        console.log(user);
+        document.getElementById('signup').hide();
+        console.log("Signed In");    
+        ons.notification.alert("Sign Up Complete");
+        }else{
+          var dialog = document.getElementById('signup');
+          if (dialog) {
+            dialog.show();
+          }
+          else {
+            ons.createDialog('dialog1.html')
+              .then(function (dialog) {
+                dialog.show();
+                
+                                      });
+              }
+        }
+        
+                      
+    }
+    
+ });
+ //---------------------sign in------------------------------
+ document.addEventListener('postchange', function(event) {
+    var tab = event.index;
+    console.log(tab);
+    if(tab==1){
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+        console.log(user);
+        document.getElementById('signin').hide();
+        console.log("Signed In");
+        document.addEventListener("click", function(event){
+          console.log(event.target.id);
+          var user = firebase.auth().currentUser;
+          if(event.target.id=='up') {
+            ons.notification.alert("Sign Up Complete");
+          }
+          if(event.target.id=='in'){
+            ons.notification.alert("Sign In Complete");
+          }
+        });    
+        
+        } else {
+          
+          var dialog = document.getElementById('signin');
+          if (dialog) {
+            dialog.show();
+          }
+          else {
+            ons.createDialog('dialog.html')
+              .then(function (dialog) {
+                dialog.show();
+                
+                                      });
+              }     
+                       
+                }
+                
+      });
+    }
+    
+    });
+    
+    
+    
+});
+
+function hideDialog() {
+  var dialog = document.getElementById('signup');
+  dialog.hide();
+  check();
+  
+};
+
+  
+function onLoad() {
+  document.addEventListener("deviceready", onDeviceReady, false);
+}
+
+// device APIs are available
+//
+
+function onDeviceReady() {
+  // Now safe to use device APIs
+  console.log("navigator.geolocation works well");
+    
+  
+    // onSuccess Callback 
+    // This method accepts a Position object, which contains the 
+    // current GPS coordinates 
+    // 
+    var onSuccess = function(position) {
+     
+            ltd = position.coords.latitude;
+            lgt = position.coords.longitude;
+            ons.notification.alert("Success!!");
+  };
+
+  // onError Callback receives a PositionError object 
+  // 
+  function onError(error) {
+      alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+function currentLocation() {
+  // Now safe to use device APIs
+  console.log("navigator.geolocation works well");
+    
+  
+    // onSuccess Callback 
+    // This method accepts a Position object, which contains the 
+    // current GPS coordinates 
+    // 
+    var onSuccess = function(position) {
+     
+            ltd = position.coords.latitude;
+            lgt = position.coords.longitude;
+            ons.notification.alert("Success!!");
+  };
+
+  // onError Callback receives a PositionError object 
+  // 
+  function onError(error) {
+      alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+
+
+ 
+
+
+
 //-------------------------------------Location---------------------------------
 function locate(){
 
@@ -156,11 +242,12 @@ function locate(){
 //---------------------------------------Post----------------------------------------
 
 function add(){
-  if(imgCheck===true){
+  if(imgCheck===true && ltd!=0 && lgt!=0){
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
-    
+    var hh = today.getHours();
+    var MM = today.getMinutes();
     var yyyy = today.getFullYear();
     if(dd<10){
         dd='0'+dd;
@@ -168,29 +255,34 @@ function add(){
     if(mm<10){
         mm='0'+mm;
     } 
-    var today = dd+'/'+mm+'/'+yyyy;
+    var today = dd+'/'+mm+'/'+yyyy+'/ '+hh+':'+MM;
     
   var description = document.getElementById('description').value;
   var timestamp = Number(new Date());
   var user = firebase.auth().currentUser;
-  console.log(description);
   var db = firebase.firestore();
   if(user != null){
   db.collection("pins").doc("'"+timestamp+"'").set({
     id: timestamp,
-    photo: photoURL,
+    photo: photoUrl,
     description: description,
     lat: ltd,
     long: lgt,
-    poster: name = user.email,
-    time: today
-  })
+    poster: user.displayName,
+    posterPhoto: user.photoURL,
+    time: today,
+    liker: [],
+    like: 0,
+    posterId: user.uid
+
+  });
+
  }
-  location.reload();
+ location.reload(); 
 
  }else{
-  ons.notification.alert("Photo must have")
-}
+  ons.notification.alert("Information Must Have")
+ }
 } 
 //---------------------------------------------Timeline----------------------------------
 $(function(){
@@ -210,16 +302,16 @@ $(function(){
           
 
     });
-  })  
+ });  
 
-
-});
+ 
+ });
 
 //---------------------------------------------Map--------------------------------------
 
 function initMap() {
                
-                var uluru = {lat: 0, lng: 0};
+                var uluru = {lat: ltd, lng: lgt};
                 var map = new google.maps.Map(document.getElementById('map'), {
                   zoom: 16,
                   center: uluru
@@ -272,6 +364,7 @@ function signinWithEmail(){
   var email = document.getElementById('username1').value;
   var password = document.getElementById('password1').value;
   firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -283,30 +376,48 @@ function signinWithEmail(){
     }
     console.log(error);
     
+    
+      
+        
+      
+    
     // [END_EXCLUDE]
   });
   // [END authwithemail]
+
+  
+  
 }
 
 
 function signout(){
 
   firebase.auth().signOut();
+  console.log("Signed Out");
   
 
 }
 
 
 function signUp(){
-  var email = document.getElementById('username').value;
-  var password = document.getElementById('password').value;
+  var email = document.getElementById('username2').value;
+  var password = document.getElementById('password2').value;
   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
     // ...
+    if (errorCode === 'auth/wrong-password') {
+      ons.notification.alert('Wrong password.');
+    } else {
+      ons.notification.alert(errorMessage);
+    }
+    console.log(error);
+        
+    
+    
   });
-  
+    
 }
 
 
@@ -317,19 +428,184 @@ function signUp(){
 
 //----------------------------------------------DeletePost-----------------------------------
 function deletePost(id){
-  console.log(id);
-  var did = id;
-  var db = firebase.firestore();
-  
-  db.collection("pins").doc(did).delete().then(function() {
-    console.log("Document successfully deleted!");
-  }).catch(function(error) {
-    console.error("Error removing document: ", error);
-  });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var compare = user.email;
+      var db = firebase.firestore();   
+      var firestoreRef = db.collection("pins").doc(id);
+      firestoreRef.get().then(function(doc) {
+      var posteruid = doc.data().posterId;
+      if(posteruid == user.uid){
+        console.log(id);
+        var did = id;
+        var db = firebase.firestore();  
+      db.collection("pins").doc(did).delete().then(function() {
+        ons.notification.alert("Document successfully deleted!");
+    }).catch(function(error) {
+      console.error("Error removing document: ", error);
+    });
+    location.reload();
 
+      }else{
+        ons.notification.alert("This is not your post!");
+        console.log(posteruid);
+      }
+
+
+      });
+ }else{
+  ons.notification.alert("This is not your post!");
+ }
+  });
+  }
+
+function like(pid){
+  console.log(pid);
+  
+  
+  
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var compare = user.email;
+      var db = firebase.firestore();   
+      var firestoreRef = db.collection("pins").doc(pid);
+      firestoreRef.get().then(function(doc) {
+      var indexofKey =null;    
+            
+            
+            var array = doc.data().liker;
+            var lastindex = array.length;
+            var arrayLength = Object.keys(array).length-1;
+                       
+            var found = Object.keys(array).some(function (k) {
+              if (array[k] === compare) {
+                
+                indexofKey = k;
+                  return true;
+              }else{
+                
+                return false;
+              }
+          });
+          if(indexofKey != null){
+            //Delete
+          }else{
+            //Add
+            var timestamp = Number(new Date());
+            
+            var lastindex = indexofKey+1;
+            var update = new Object();
+            update[timestamp]= compare;
+            firestoreRef.update({
+              liker: update
+            });
+          }
+            
+                
+            
+            var array1 = doc.data().liker;
+            
+            console.log(indexofKey);
+            console.log(Object.getOwnPropertyDescriptor(array1, 8));
+            
+        
+      });
+      document.getElementById('signin').hide();
+      console.log("Signed In");
+    } else {
+      var dialog = document.getElementById('signin');
+      if (dialog) {
+        dialog.show();
+      }
+      else {
+        ons.createDialog('dialog.html')
+          .then(function (dialog) {
+            dialog.show();
+            console.log(document.getElementById('signin'));
+                                  });
+          }     
+                   
+            }
+    
+  });
+  
+  
+  
+  location.reload(); 
 }
 
-var x = document.getElementById('xxx');
-console.log(x);
+function reload(){
+  location.reload();
+}
 
+function updateDisplayName(){
+  var user = firebase.auth().currentUser;
+  var name = document.getElementById('displayName').value;
+  
+  if(user){
+      // Updates the user attributes:
+ user.updateProfile({
 
+  displayName: name  
+
+ }).then(function() {
+  
+  var displayName = user.displayName;
+  
+    
+  console.log(displayName);
+  if(displayName == name){
+    ons.notification.alert("Success");
+  }
+  
+ }, function(error) {
+  
+ });
+    }
+}
+var displayPhotoUpload;
+
+function upload(){
+  var photo = $("#photoUpload").prop("files")[0];
+  var storage = firebase.storage();
+  var storageRef = firebase.storage().ref();
+  var timestamp = Number(new Date());
+  var photoRef = storageRef.child("photos/"+ timestamp+ ".png");
+      photoRef.put(photo).then(function (snapshot) {
+      photoRef.getDownloadURL().then(function (url) {
+      displayPhotoUpload = url
+      $("#previewDisplay").attr("src", displayPhotoUpload);
+      })
+  });
+  console.log(displayPhotoUpload);  
+  }
+
+function updatePhotoDisplay(){
+  
+  
+  var user = firebase.auth().currentUser;
+  
+  
+  
+
+  if(user){
+    // Updates the user attributes:
+ user.updateProfile({
+ 
+  photoURL: displayPhotoUpload
+
+ }).then(function() {
+
+  var photoURL = user.photoURL;
+
+ console.log(photoURL);
+ 
+ if(photoURL == displayPhotoUpload){
+  ons.notification.alert("Success");
+ }
+
+ }, function(error) {
+
+ });
+  }
+}
