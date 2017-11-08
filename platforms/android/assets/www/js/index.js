@@ -2,7 +2,7 @@ var ltd = 0;
 var lgt = 0; 
 var photoUrl = null;
 var db;
-var imgCheck = false;
+
 var config = {
     apiKey: "AIzaSyASZCb_OgmtwpSyea4_j5hhKu5XYYvTzmU",
     authDomain: "fir-e5e4e.firebaseapp.com",
@@ -55,8 +55,8 @@ function cam() {
       photoRef.put(blob).then(function (snapshot) {
       photoRef.getDownloadURL().then(function (url) {
       photoUrl = url;
-      imgCheck = true;
-      ons.notification.alert(url);
+      
+      
           $("#preview").attr("src", url);
       })
   });
@@ -365,7 +365,8 @@ function locate(){
 //---------------------------------------Post----------------------------------------
 
 function add(){
-  if(imgCheck===true){
+  if(photoUrl!=null){
+    
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
