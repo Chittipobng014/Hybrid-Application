@@ -390,8 +390,6 @@ function add(){
     id: timestamp,
     photo: photoUrl,
     description: description,
-    lat: ltd,
-    long: lgt,
     poster: user.displayName,
     posterPhoto: user.photoURL,
     time: today,
