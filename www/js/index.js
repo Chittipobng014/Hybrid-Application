@@ -1,6 +1,6 @@
 var ltd = 0;
 var lgt = 0; 
-var photoUrl = null;
+var photoUrl = "https://html.com/wp-content/uploads/very-large-flamingo.jpg";
 var db;
 
 var config = {
@@ -365,6 +365,7 @@ function locate(){
 //---------------------------------------Post----------------------------------------
 
 function add(){
+  var obj =new Object();
   if(photoUrl!=null){
     
     var today = new Date();
@@ -393,7 +394,7 @@ function add(){
     poster: user.displayName,
     posterPhoto: user.photoURL,
     time: today,
-    liker: [],
+    liker: {},
     like: 0,
     posterId: user.uid
 
@@ -548,7 +549,7 @@ function signUp(){
 
 
 
-var object = new Object();
+
 //----------------------------------------------DeletePost-----------------------------------
 function deletePost(id){
   firebase.auth().onAuthStateChanged(function(user) {
@@ -584,7 +585,7 @@ function deletePost(id){
 
 function like(pid){
   console.log(pid);
-  
+  var object = {};
   
   
   firebase.auth().onAuthStateChanged(function(user) {
@@ -598,12 +599,13 @@ function like(pid){
             
             var array = doc.data().liker;
             var lastindex = array.length;
-            var arrayLength = Object.keys(array).length-1;
             
+            object = doc.data().liker;
+            var arrayLength = Object.keys(object).length;
             var timestamp = Number(new Date());
-            object[timestamp] = "test";
-            console.log(object);           
-            var found = Object.keys(array).some(function (k) {
+            
+                       
+            var found = Object.keys(object).some(function (k) {
               if (array[k] === compare) {
                 
                 indexofKey = k;
@@ -614,21 +616,30 @@ function like(pid){
               }
           });
           if(indexofKey != null){
-            //Delete
-          }else{
-            //Add
-            var timestamp = Number(new Date());
-            
-            var lastindex = indexofKey+1;
-            var update = new Object();
-            update[timestamp]= compare;
+            console.log("found");//Delete
+            delete object[indexofKey];
             firestoreRef.update({
-              liker: update
+              liker: object,
+              like: arrayLength-1
             });
+            location.reload();
+          }else{
+            object[timestamp] = compare;
+            //Add
+            // // var timestamp = Number(new Date());
+            
+            // // var lastindex = indexofKey+1;
+            // // var update = new Object();
+            // // update[timestamp]= compare;
+            firestoreRef.update({
+              liker: object,
+              like: arrayLength+1
+            });
+            location.reload();
           }
             
                 
-            
+          console.log(object);
             var array1 = doc.data().liker;
             
             console.log(indexofKey);
@@ -657,7 +668,7 @@ function like(pid){
   
   
   
-  // location.reload(); 
+   
 }
 
 function reload(){
