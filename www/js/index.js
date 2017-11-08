@@ -1,6 +1,6 @@
 var ltd = 0;
 var lgt = 0; 
-var photoUrl = "https://html.com/wp-content/uploads/very-large-flamingo.jpg";
+var photoUrl = null;
 var db;
 
 var config = {
@@ -549,7 +549,6 @@ function signUp(){
 
 
 
-
 //----------------------------------------------DeletePost-----------------------------------
 function deletePost(id){
   firebase.auth().onAuthStateChanged(function(user) {
@@ -607,6 +606,7 @@ function like(pid){
                        
             var found = Object.keys(object).some(function (k) {
               if (array[k] === compare) {
+                
                 
                 indexofKey = k;
                   return true;
@@ -670,6 +670,11 @@ function like(pid){
   
    
 }
+
+
+
+
+
 
 function reload(){
   location.reload();
